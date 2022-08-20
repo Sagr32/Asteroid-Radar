@@ -11,7 +11,10 @@ import com.sagr.asteroidradar.databinding.FragmentMainBinding
 class MainFragment : Fragment() {
 
     private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this)[MainViewModel::class.java]
+        ViewModelProvider(
+            this,
+            MainViewModelFactory(requireNotNull(this.activity).application)
+        )[MainViewModel::class.java]
     }
 
     override fun onCreateView(
