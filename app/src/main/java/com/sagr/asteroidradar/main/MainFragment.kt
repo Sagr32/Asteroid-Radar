@@ -33,7 +33,6 @@ class MainFragment : Fragment() {
         viewModel.navigateToDetails.observe(viewLifecycleOwner, Observer {
 
             if (it != null) {
-                Toast.makeText(context, it.codename, Toast.LENGTH_SHORT).show()
                 this.findNavController()
                     .navigate(MainFragmentDirections.actionShowDetail(it))
                 viewModel.onDoneNavigation()

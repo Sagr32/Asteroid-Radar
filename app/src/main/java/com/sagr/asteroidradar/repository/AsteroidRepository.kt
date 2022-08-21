@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import retrofit2.HttpException
+import timber.log.Timber
 import java.io.IOException
 
 class AsteroidRepository(private val database: AsteroidDatabase) {
@@ -29,15 +30,15 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
             try {
                 val asteroids = AsteroidApi.retrofitService.getAsteroids(Constants.API_KEY)
                 val result = parseAsteroidsJsonResult(JSONObject(asteroids))
-                Log.v("AsteroidRepository", result.toString())
+                Timber.d(result.toString())
                 database.asteroidDao.insertAll(*result.asDatabaseModel())
-                Log.v("AsteroidRepository", "Data inserted")
+                Timber.d("Data inserted")
 
 
             } catch (error: HttpException) {
-                Log.v("AsteroidRepository", error.message.toString())
+                Timber.d(error.message.toString())
             } catch (io: IOException) {
-                Log.v("AsteroidRepository", io.message.toString())
+                Timber.d(io.message.toString())
 
             }
 

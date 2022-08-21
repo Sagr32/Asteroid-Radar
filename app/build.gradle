@@ -65,6 +65,8 @@ dependencies {
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.8'
 
+    // Timber
+    implementation 'com.jakewharton.timber:timber:5.0.1'
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
