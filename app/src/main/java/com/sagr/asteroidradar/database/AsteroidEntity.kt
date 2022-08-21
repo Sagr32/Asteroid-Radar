@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 import com.sagr.asteroidradar.Asteroid
 import com.sagr.asteroidradar.Constants
 
-@Entity(tableName = Constants.TABLE_NAME)
+//@Entity(tableName = Constants.TABLE_NAME)
+@Entity(tableName = "asteroids")
 data class AsteroidEntity(
     @PrimaryKey
     val id: Long, val codename: String, val closeApproachDate: String,

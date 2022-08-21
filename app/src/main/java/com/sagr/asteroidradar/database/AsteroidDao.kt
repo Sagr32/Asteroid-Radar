@@ -5,12 +5,11 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.sagr.asteroidradar.Constants
 
 @Dao
 interface AsteroidDao {
 
-    @Query("select * from ${Constants.TABLE_NAME}")
+    @Query("select * from asteroids")
     fun getAsteroids(): LiveData<List<AsteroidEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

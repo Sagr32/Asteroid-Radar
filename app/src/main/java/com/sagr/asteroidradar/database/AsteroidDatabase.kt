@@ -3,6 +3,7 @@ package com.sagr.asteroidradar.database
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.sagr.asteroidradar.Asteroid
 import com.sagr.asteroidradar.Constants
 
 @Database(entities = [AsteroidEntity::class], version = 1)
@@ -29,4 +30,19 @@ abstract class AsteroidDatabase : RoomDatabase() {
         }
     }
 
+}
+
+fun List<AsteroidEntity>.asDomainModel(): List<Asteroid> {
+    return map {
+        Asteroid(
+            id = it.id,
+            codename = it.codename,
+            closeApproachDate = it.closeApproachDate,
+            absoluteMagnitude = it.absoluteMagnitude,
+            estimatedDiameter = it.estimatedDiameter,
+            relativeVelocity = it.relativeVelocity,
+            distanceFromEarth = it.distanceFromEarth,
+            isPotentiallyHazardous = it.isPotentiallyHazardous
+        )
+    }
 }
