@@ -8,18 +8,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sagr.asteroidradar.Asteroid
 import com.sagr.asteroidradar.databinding.AsteroidItemBinding
 
-class MainAdapter : ListAdapter<Asteroid,
+class MainAdapter(private val clickListener: AsteroidListener) : ListAdapter<Asteroid,
         MainAdapter.ViewHolder>(AsteroidDiffCallback()) {
 
 
     class ViewHolder(private val binding: AsteroidItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-
         fun bind(
             item: Asteroid,
+            clickListener: AsteroidListener
         ) {
             binding.asteroid = item
+            binding.asteroidListener = clickListener
             binding.executePendingBindings()
 
 
@@ -42,8 +43,7 @@ class MainAdapter : ListAdapter<Asteroid,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-
-        holder.bind(item)
+        holder.bind(item, clickListener)
     }
 }
 
@@ -57,3 +57,13 @@ class AsteroidDiffCallback : DiffUtil.ItemCallback<Asteroid>() {
         return oldItem == newItem
     }
 }
+
+class AsteroidListener(val clickListener: (asteroid: Asteroid) -> Unit) {
+    fun onClick(asteroid: Asteroid) = clickListener(asteroid)
+}
+
+
+
+
+
+
