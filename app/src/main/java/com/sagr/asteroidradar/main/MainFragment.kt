@@ -1,12 +1,12 @@
 package com.sagr.asteroidradar.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.sagr.asteroidradar.R
 import com.sagr.asteroidradar.databinding.FragmentMainBinding
 
@@ -30,8 +30,20 @@ class MainFragment : Fragment() {
         binding.viewModel = viewModel
 
         setHasOptionsMenu(true)
+        viewModel.navigateToDetails.observe(viewLifecycleOwner, Observer {
+
+            if (it != null) {
+                Toast.makeText(context, it.codename, Toast.LENGTH_SHORT).show()
+                this.findNavController()
+                    .navigate(MainFragmentDirections.actionShowDetail(it))
+                viewModel.onDoneNavigation()
+            }
+
+
+        })
+
         val adapter = MainAdapter(AsteroidListener {
-            Toast.makeText(context, "id = ${it.id} was clicked", Toast.LENGTH_SHORT).show()
+            viewModel.startNavigation(it)
         })
 
         binding.asteroidRecycler.adapter = adapter
