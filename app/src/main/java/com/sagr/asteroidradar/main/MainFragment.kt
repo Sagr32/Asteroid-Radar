@@ -1,14 +1,20 @@
 package com.sagr.asteroidradar.main
 
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.sagr.asteroidradar.R
+import com.sagr.asteroidradar.api.getNextSevenDaysFormattedDates
 import com.sagr.asteroidradar.databinding.FragmentMainBinding
+import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class MainFragment : Fragment() {
@@ -20,6 +26,7 @@ class MainFragment : Fragment() {
         )[MainViewModel::class.java]
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,7 +38,6 @@ class MainFragment : Fragment() {
 
         setHasOptionsMenu(true)
         viewModel.navigateToDetails.observe(viewLifecycleOwner, Observer {
-
             if (it != null) {
                 this.findNavController()
                     .navigate(MainFragmentDirections.actionShowDetail(it))
@@ -45,8 +51,10 @@ class MainFragment : Fragment() {
             viewModel.startNavigation(it)
         })
 
+
         binding.asteroidRecycler.adapter = adapter
         viewModel.asteroids.observe(viewLifecycleOwner, Observer {
+            Timber.d("MainAdapter", "Triggred")
             it?.let {
                 adapter.submitList(it)
             }
@@ -61,6 +69,24 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return true
+
+        when (item.itemId) {
+            R.id.show_all_menu -> {
+                Timber.d(item.title.toString())
+                viewModel.updateFilter(AsteroidFilter.ALL)
+            }
+            R.id.show_week_menu -> {
+                Timber.d(item.title.toString())
+
+                viewModel.updateFilter(AsteroidFilter.WEEKLY)
+
+            }
+            else -> {
+                Timber.d(item.title.toString())
+
+                viewModel.updateFilter(AsteroidFilter.TODAY)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

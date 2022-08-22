@@ -57,6 +57,7 @@
                         android:layout_marginTop="4dp"
                         android:text="@{asteroid.closeApproachDate}"
                         android:textColor="@color/default_text_color"
+                        android:contentDescription="@{asteroid.closeApproachDate}"
                         tools:text="2020-02-01" />
                 </LinearLayout>
 
@@ -93,6 +94,7 @@
                         android:id="@+id/help_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/astronomica_unit_explanation"
                         android:padding="16dp"
                         app:srcCompat="@drawable/ic_help_circle" />
 

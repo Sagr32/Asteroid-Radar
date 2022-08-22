@@ -9,11 +9,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.sagr.asteroidradar.R
 import com.sagr.asteroidradar.databinding.FragmentDetailBinding
+import timber.log.Timber
 
 
 class DetailFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding = FragmentDetailBinding.inflate(inflater)
         binding.lifecycleOwner = this
 
