@@ -14,6 +14,10 @@
             type="com.sagr.asteroidradar.main.AsteroidListener" />
     </data>
 
+    <!--
+    A view that represent each single item in the recycler view ,
+    we used constraintlayout to implement complex view
+    -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
