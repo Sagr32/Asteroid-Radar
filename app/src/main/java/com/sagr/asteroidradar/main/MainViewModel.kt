@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.sagr.asteroidradar.Asteroid
 import com.sagr.asteroidradar.Constants
+import com.sagr.asteroidradar.PictureOfDay
 import com.sagr.asteroidradar.api.AsteroidApi
 import com.sagr.asteroidradar.api.asDatabaseModel
 import com.sagr.asteroidradar.api.parseAsteroidsJsonResult
@@ -22,11 +23,22 @@ import java.util.*
 
 enum class AsteroidFilter { ALL, TODAY, WEEKLY }
 
+enum class AsteroidApiStatus { LOADING, DONE, FAILED }
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val database = AsteroidDatabase.getInstance(application)
     private val asteroidRepository = AsteroidRepository(database)
     private val _filter = MutableLiveData(AsteroidFilter.WEEKLY)
+
+    private val _picOfDay = MutableLiveData<PictureOfDay>()
+
+    val picOfDay: LiveData<PictureOfDay>
+        get() = _picOfDay
+
+    private val _loadingProgress = MutableLiveData(AsteroidApiStatus.LOADING)
+
+    val loadingProgress: LiveData<AsteroidApiStatus>
+        get() = _loadingProgress
 
 
     var asteroids: LiveData<List<Asteroid>> = Transformations.switchMap(_filter) {
@@ -47,15 +59,40 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     init {
         viewModelScope.launch {
             refreshAsteroid()
+            getPicOfTheDay()
+        }
+
+    }
+
+    private suspend fun getPicOfTheDay() {
+        try {
+            asteroidRepository.getPicOfDay()
+            asteroidRepository.response.let {
+                if (asteroidRepository.response.isSuccessful) {
+                    _picOfDay.value = asteroidRepository.response.body()
+                }
+            }
+
+        } catch (error: HttpException) {
+            Timber.d(error.message.toString())
+
+        } catch (error: IOException) {
+            Timber.d(error.message.toString())
+
         }
     }
 
     private suspend fun refreshAsteroid() {
+        _loadingProgress.value = AsteroidApiStatus.LOADING
         try {
             asteroidRepository.refreshAsteroids()
+            _loadingProgress.value = AsteroidApiStatus.DONE
         } catch (error: HttpException) {
+            _loadingProgress.value = AsteroidApiStatus.FAILED
             Timber.d(error.message.toString())
         } catch (io: IOException) {
+            _loadingProgress.value = AsteroidApiStatus.FAILED
+
             Timber.d(io.message.toString())
         }
     }

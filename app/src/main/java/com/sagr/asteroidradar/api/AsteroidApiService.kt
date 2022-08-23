@@ -13,7 +13,7 @@ interface AsteroidApiService {
 //            Response<String>
 
     @GET("planetary/apod")
-    suspend fun getPicOfDay(@Query("api_key") key: String): PictureOfDay
+    suspend fun getPicOfDay(@Query("api_key") key: String): Response<PictureOfDay>
 }
 
 

@@ -1,8 +1,13 @@
 package com.sagr.asteroidradar
 
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
+import com.sagr.asteroidradar.main.AsteroidApiStatus
+import com.squareup.picasso.Picasso
 
 @BindingAdapter("statusIcon")
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
@@ -51,4 +56,34 @@ fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
     textView.text = String.format(context.getString(R.string.km_s_unit_format), number)
     textView.contentDescription =
         String.format(context.getString(R.string.km_s_unit_format), number)
+}
+
+@BindingAdapter("asteroidLoadingProgress")
+fun bindLoadingStatus(progressBar: ProgressBar, status: AsteroidApiStatus?) {
+    status?.let {
+        when (status) {
+            AsteroidApiStatus.LOADING -> {
+                progressBar.visibility = View.VISIBLE
+            }
+            AsteroidApiStatus.FAILED -> {
+                progressBar.visibility = View.GONE
+//                imageViewStatus.setImageResource(R.drawable.ic_broken_image)
+            }
+            else -> {
+                progressBar.visibility = View.GONE
+            }
+        }
+    }
+}
+
+@BindingAdapter("imageUrl")
+fun bindImage(imgView: ImageView, imgUrl: String?) {
+    imgUrl?.let {
+        val imgUri = it.toUri().buildUpon().scheme("https").build()
+        Picasso.get()
+            .load(imgUrl)
+            .placeholder(R.drawable.loading_animation)
+            .error(R.drawable.ic_broken_image)
+            .into(imgView)
+    }
 }

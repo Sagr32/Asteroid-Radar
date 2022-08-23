@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.sagr.asteroidradar.Asteroid
 import com.sagr.asteroidradar.Constants
+import com.sagr.asteroidradar.PictureOfDay
 import com.sagr.asteroidradar.api.AsteroidApi
 import com.sagr.asteroidradar.api.asDatabaseModel
 import com.sagr.asteroidradar.api.parseAsteroidsJsonResult
@@ -13,13 +14,18 @@ import com.sagr.asteroidradar.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import retrofit2.Response
 
 class AsteroidRepository(private val database: AsteroidDatabase) {
 
+    lateinit var response: Response<PictureOfDay>
 
     val weeklyAsteroids: LiveData<List<Asteroid>> =
         Transformations.map(
-            database.asteroidDao.getWeeklyAsteroids(DateUtils.getTodayDate(), DateUtils.getEndDate())
+            database.asteroidDao.getWeeklyAsteroids(
+                DateUtils.getTodayDate(),
+                DateUtils.getEndDate()
+            )
         ) {
             it.asDomainModel()
         }
@@ -51,7 +57,7 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
 
     suspend fun getPicOfDay() {
         withContext(Dispatchers.IO) {
-            AsteroidApi.retrofitService.getPicOfDay(Constants.API_KEY)
+            response = AsteroidApi.retrofitService.getPicOfDay(Constants.API_KEY)
         }
     }
 }

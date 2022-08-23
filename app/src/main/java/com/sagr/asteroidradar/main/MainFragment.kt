@@ -43,9 +43,15 @@ class MainFragment : Fragment() {
                     .navigate(MainFragmentDirections.actionShowDetail(it))
                 viewModel.onDoneNavigation()
             }
-
-
         })
+
+        viewModel.picOfDay.observe(viewLifecycleOwner, Observer {
+            it.let {
+                binding.picOfDay = it
+                binding.textView.text = it.title
+            }
+        })
+
 
         val adapter = MainAdapter(AsteroidListener {
             viewModel.startNavigation(it)
@@ -54,7 +60,6 @@ class MainFragment : Fragment() {
 
         binding.asteroidRecycler.adapter = adapter
         viewModel.asteroids.observe(viewLifecycleOwner, Observer {
-            Timber.d("MainAdapter", "Triggred")
             it?.let {
                 adapter.submitList(it)
             }

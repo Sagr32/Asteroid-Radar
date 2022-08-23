@@ -8,6 +8,9 @@
             name="viewModel"
             type="com.sagr.asteroidradar.main.MainViewModel" />
 
+        <variable
+            name="picOfDay"
+            type="com.sagr.asteroidradar.PictureOfDay" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
+                app:imageUrl="@{picOfDay.url}"
                 android:contentDescription="@string/picture_of_the_day"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/placeholder_picture_of_day" />
@@ -63,6 +67,7 @@
             android:layout_height="wrap_content"
             android:indeterminate="true"
             android:visibility="gone"
+            app:asteroidLoadingProgress="@{viewModel.loadingProgress}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
